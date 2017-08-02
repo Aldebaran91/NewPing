@@ -1,4 +1,4 @@
-NewPing Library + (Ultrasonic Sensors)
+NewPing Library with Kalman-Filter (Ultrasonic Sensors) 
 
 New stuff:
 - cm distance in float (ping_cm())
