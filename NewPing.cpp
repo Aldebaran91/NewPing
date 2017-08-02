@@ -11,6 +11,7 @@ float CURRENT_ESTIMATE = -1.00f;
 float PREVIOUS_ESTIMATE = INIT_MEASUREMENT;
 float KALMAN_GAIN = 0.50f;
 float ERROR_IN_ESTIMATE = 0.20f;
+float ONE_HUNDRED_PERCENT = 1.00f;
 
 
 // ---------------------------------------------------------------------------
@@ -80,7 +81,7 @@ unsigned int NewPing::ping(unsigned int max_cm_distance) {
 float NewPing::ping_cm_kalman(unsigned int max_cm_distance, float error_in_measurement) {
 	if (CURRENT_ESTIMATE == -1.0f)					// If -1.0f update CURRENT_ESTIMATE with RAW value.
 	{
-		ERROR_IN_ESTIMATE = (1 - KALMAN_GAIN) * ERROR_IN_ESTIMATE;
+		ERROR_IN_ESTIMATE = (ONE_HUNDRED_PERCENT - KALMAN_GAIN) * ERROR_IN_ESTIMATE;
 		KALMAN_GAIN = ERROR_IN_ESTIMATE / (ERROR_IN_ESTIMATE + error_in_measurement);
 		// -> First current_estimate normally
 		//CURRENT_ESTIMATE = INIT_MEASUREMENT + KALMAN_GAIN * ((float)NewPing::ping_cm(max_cm_distance) - INIT_MEASUREMENT);
@@ -89,7 +90,7 @@ float NewPing::ping_cm_kalman(unsigned int max_cm_distance, float error_in_measu
 	}
 	else
 	{
-		ERROR_IN_ESTIMATE = (1 - KALMAN_GAIN) * ERROR_IN_ESTIMATE;
+		ERROR_IN_ESTIMATE = (ONE_HUNDRED_PERCENT - KALMAN_GAIN) * ERROR_IN_ESTIMATE;
 		KALMAN_GAIN = error_in_measurement / (ERROR_IN_ESTIMATE + error_in_measurement);
 	}
 	PREVIOUS_ESTIMATE = CURRENT_ESTIMATE;
