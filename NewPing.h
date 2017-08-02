@@ -151,6 +151,7 @@
 #define ROUNDING_ENABLED false  // Set to "true" to enable distance rounding which also adds 64 bytes to binary size. Default=false
 #define URM37_ENABLED false     // Set to "true" to enable support for the URM37 sensor in PWM mode. Default=false
 #define TIMER_ENABLED true      // Set to "false" to disable the timer ISR (if getting "__vector_7" compile errors set this to false). Default=true
+#define INIT_MEASUREMENT 1.0f
 
 // Probably shouldn't change these values unless you really know what you're doing.
 #define NO_ECHO 0               // Value returned if there's no ping echo within the specified MAX_SENSOR_DISTANCE or max_cm_distance. Default=0
@@ -159,6 +160,7 @@
 #define PING_MEDIAN_DELAY 29000 // Microsecond delay between pings in the ping_median method. Default=29000
 #define PING_OVERHEAD 5         // Ping overhead in microseconds (uS). Default=5
 #define PING_TIMER_OVERHEAD 13  // Ping timer overhead in microseconds (uS). Default=13
+
 #if URM37_ENABLED == true
 	#undef  US_ROUNDTRIP_CM
 	#undef  US_ROUNDTRIP_IN
@@ -205,7 +207,8 @@ class NewPing {
 	public:
 		NewPing(uint8_t trigger_pin, uint8_t echo_pin, unsigned int max_cm_distance = MAX_SENSOR_DISTANCE);
 		unsigned int ping(unsigned int max_cm_distance = 0);
-		unsigned long ping_cm(unsigned int max_cm_distance = 0);
+		float ping_cm(unsigned int max_cm_distance = 0);
+		float ping_cm_kalman(unsigned int max_cm_distance = 0, float error_in_measurement = 0.2f);
 		unsigned long ping_in(unsigned int max_cm_distance = 0);
 		unsigned long ping_median(uint8_t it = 5, unsigned int max_cm_distance = 0);
 		static unsigned int convert_cm(unsigned int echoTime);

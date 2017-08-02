@@ -1,17 +1,9 @@
-NewPing Library (Ultrasonic Sensors)
+NewPing Library + (Ultrasonic Sensors)
 
-Written by Tim Eckel
+New stuff:
+- cm distance in float (ping_cm())
+- cm distance in float with kalman filter (ping_cm_kalman())
 
-https://bitbucket.org/teckel12/arduino-new-ping/wiki/Home
+![Screenshot](https://raw.githubusercontent.com/Aldebaran91/NewPing/master/extras/NewPingPlus_screenshot.png)
 
-Modified for Teensy 3.0 & 3.1
-
-https://github.com/PaulStoffregen/NewPing
-
-http://forum.pjrc.com/threads/25907-Multiple-HCSR-04-Ultrasonic-sensors-on-teensy-3
-
-![Photo](https://raw.githubusercontent.com/PaulStoffregen/NewPing/master/extras/NewPing_photo.jpg)
-
-![Screenshot](https://raw.githubusercontent.com/PaulStoffregen/NewPing/master/extras/NewPing_screenshot.png)
-
-
+![Screenshot](https://raw.githubusercontent.com/Aldebaran91/NewPing/master/extras/NewPingLog_screenshot.png)

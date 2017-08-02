@@ -7,6 +7,11 @@
 
 #include "NewPing.h"
 
+float CURRENT_ESTIMATE = -1.00f;
+float PREVIOUS_ESTIMATE = INIT_MEASUREMENT;
+float KALMAN_GAIN = 0.00f;
+float ERROR_IN_ESTIMATE = 0.20f;
+
 
 // ---------------------------------------------------------------------------
 // NewPing constructor
@@ -72,12 +77,32 @@ unsigned int NewPing::ping(unsigned int max_cm_distance) {
 }
 
 
-unsigned long NewPing::ping_cm(unsigned int max_cm_distance) {
-	unsigned long echoTime = NewPing::ping(max_cm_distance); // Calls the ping method and returns with the ping echo distance in uS.
+float NewPing::ping_cm_kalman(unsigned int max_cm_distance, float error_in_measurement) {
+	if (CURRENT_ESTIMATE == -1.0f)					// If -1.0f update CURRENT_ESTIMATE with RAW value.
+	{
+		ERROR_IN_ESTIMATE = (1 - KALMAN_GAIN) * ERROR_IN_ESTIMATE;
+		KALMAN_GAIN = ERROR_IN_ESTIMATE / (ERROR_IN_ESTIMATE + error_in_measurement);
+		// -> First current_estimate normally
+		//CURRENT_ESTIMATE = INIT_MEASUREMENT + KALMAN_GAIN * ((float)NewPing::ping_cm(max_cm_distance) - INIT_MEASUREMENT);
+		// -> Delivers better first estimate
+		CURRENT_ESTIMATE = (float)NewPing::ping_cm(max_cm_distance);
+	}
+	else
+	{
+		ERROR_IN_ESTIMATE = (1 - KALMAN_GAIN) * ERROR_IN_ESTIMATE;
+		KALMAN_GAIN = error_in_measurement / (ERROR_IN_ESTIMATE + error_in_measurement);
+	}
+	PREVIOUS_ESTIMATE = CURRENT_ESTIMATE;
+	CURRENT_ESTIMATE = PREVIOUS_ESTIMATE + KALMAN_GAIN * ((float)NewPing::ping_cm(max_cm_distance) - PREVIOUS_ESTIMATE);
+	return CURRENT_ESTIMATE;
+}
+
+float NewPing::ping_cm(unsigned int max_cm_distance) {
+	float echoTime = (float)NewPing::ping(max_cm_distance); // Calls the ping method and returns with the ping echo distance in uS.
 #if ROUNDING_ENABLED == false
-	return (echoTime / US_ROUNDTRIP_CM);              // Call the ping method and returns the distance in centimeters (no rounding).
+	return (echoTime / (float)US_ROUNDTRIP_CM);              // Call the ping method and returns the distance in centimeters (no rounding).
 #else
-	return NewPingConvert(echoTime, US_ROUNDTRIP_CM); // Convert uS to centimeters.
+	return (float)NewPingConvert(echoTime, US_ROUNDTRIP_CM); // Convert uS to centimeters.
 #endif
 }
 
