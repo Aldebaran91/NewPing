@@ -99,14 +99,9 @@ float NewPing::ping_cm_kalman(unsigned int max_cm_distance, float error_in_measu
 }
 
 float NewPing::ping_cm(unsigned int max_cm_distance) {
-	float echoTime = (float)NewPing::ping(max_cm_distance); // Calls the ping method and returns with the ping echo distance in uS.
-#if ROUNDING_ENABLED == false
-	return (echoTime / (float)US_ROUNDTRIP_CM);              // Call the ping method and returns the distance in centimeters (no rounding).
-#else
-	return (float)NewPingConvert(echoTime, US_ROUNDTRIP_CM); // Convert uS to centimeters.
-#endif
+    float echoTime = (float)NewPing::ping(max_cm_distance); // Calls the ping method and returns with the ping echo distance in uS.
+    return ((echoTime / 2.0f) * MM_ROUNDTRIP_US) / 10.0f;              // Call the ping method and returns the distance in centimeters.
 }
-
 
 unsigned long NewPing::ping_in(unsigned int max_cm_distance) {
 	unsigned long echoTime = NewPing::ping(max_cm_distance); // Calls the ping method and returns with the ping echo distance in uS.
